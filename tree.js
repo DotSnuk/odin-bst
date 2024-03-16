@@ -17,7 +17,6 @@ export default class Tree {
   }
 
   insert(value, root = this.root) {
-    console.log(root);
     if (value === root.data) return false;
     if (value < root.data && root.left === null) {
       const rootElmnt = root;
