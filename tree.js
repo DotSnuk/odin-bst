@@ -4,12 +4,34 @@ import mergeSort from './mergeSort.js';
 export default class Tree {
   constructor(arr) {
     this.ogArray = Array.from(new Set(arr));
+    this.root = null;
+  }
+
+  init() {
     this.sortArray();
-    this.levelZero = this.buildTree(this.ogArray);
+    this.root = this.buildTree(this.ogArray);
   }
 
   sortArray() {
     this.ogArray = mergeSort(this.ogArray);
+  }
+
+  insert(value, root = this.root) {
+    console.log(root);
+    if (value === root.data) return false;
+    if (value < root.data && root.left === null) {
+      const rootElmnt = root;
+      rootElmnt.left = Node(value);
+      return true;
+    }
+    if (value > root.data && root.right === null) {
+      const rootElmnt = root;
+      rootElmnt.right = Node(value);
+      return true;
+    }
+    return value > root.data
+      ? this.insert(value, root.right)
+      : this.insert(value, root.left);
   }
 
   buildTree(arr) {
@@ -35,5 +57,9 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
   }
 };
 
-const sda = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
-prettyPrint(sda.levelZero);
+const bstTree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
+bstTree.init();
+prettyPrint(bstTree.root);
+bstTree.insert(6);
+bstTree.insert(500);
+prettyPrint(bstTree.root);
