@@ -24,7 +24,7 @@ export default class Tree {
     return childrenInt;
   }
 
-  static deleteCondition(rootNode, direction, children) {
+  static deleteCondition(rootNode, children, direction = null) {
     const node = rootNode;
     return {
       0: () => {
@@ -32,19 +32,29 @@ export default class Tree {
       },
       1: () => {
         ['left', 'right'].forEach(childDir => {
-          if (node[direction][childDir] !== null) node[direction] = childDir;
+          if (node[direction][childDir] !== null)
+            node[direction] = node[direction][childDir];
         });
+      },
+      2: () => {
+        // const integerToBeDeleted = node[direction].data; // find the next highest value to replace that
+        let intCompare = node[direction].right;
+        while (intCompare.left !== null) intCompare = intCompare.left;
+        console.log(intCompare);
       },
     }[children]();
   }
 
   deleteItem(value, root = this.root) {
-    if (root.data === value) return Tree.getChildrenInt(root); // need to check the first root
+    if (root.data === value) {
+      const children = Tree.getChildrenInt(root);
+      return Tree.deleteCondition(root, children);
+    } // need to check the first root
     const direction = value > root.data ? 'right' : 'left';
     if (root[direction] === null) return false;
     if (root[direction].data === value) {
       const children = Tree.getChildrenInt(root[direction]);
-      return Tree.deleteCondition(root, direction, children);
+      return Tree.deleteCondition(root, children, direction);
     }
     return this.deleteItem(value, root[direction]);
   }
@@ -95,5 +105,5 @@ bstTree.init();
 bstTree.insert(6);
 bstTree.insert(500);
 prettyPrint(bstTree.root);
-bstTree.deleteItem(7);
+bstTree.deleteItem(6);
 prettyPrint(bstTree.root);
