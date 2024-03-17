@@ -19,7 +19,7 @@ function merge(left, right) {
     merged.push(right[rIndx]);
     rIndx += 1;
   }
-  console.log(`merged ${merged}`);
+  // console.log(`merged ${merged}`);
   return merged;
 }
 

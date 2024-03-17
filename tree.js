@@ -16,8 +16,41 @@ export default class Tree {
     this.ogArray = mergeSort(this.ogArray);
   }
 
+  static getChildrenInt(node) {
+    let childrenInt = 0;
+    ['left', 'right'].forEach(direction => {
+      if (node[direction] !== null) childrenInt += 1;
+    });
+    return childrenInt;
+  }
+
+  static deleteCondition(rootNode, direction, children) {
+    const node = rootNode;
+    return {
+      0: () => {
+        node[direction] = null;
+      },
+      1: () => {
+        ['left', 'right'].forEach(childDir => {
+          if (node[direction][childDir] !== null) node[direction] = childDir;
+        });
+      },
+    }[children]();
+  }
+
+  deleteItem(value, root = this.root) {
+    if (root.data === value) return Tree.getChildrenInt(root); // need to check the first root
+    const direction = value > root.data ? 'right' : 'left';
+    if (root[direction] === null) return false;
+    if (root[direction].data === value) {
+      const children = Tree.getChildrenInt(root[direction]);
+      return Tree.deleteCondition(root, direction, children);
+    }
+    return this.deleteItem(value, root[direction]);
+  }
+
   insert(value, root = this.root) {
-    if (value === root.data) return false;
+    if (value === root.data) return Tree.getChildrenInt(root);
     if (value < root.data && root.left === null) {
       const rootElmnt = root;
       rootElmnt.left = Node(value);
@@ -58,7 +91,9 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 
 const bstTree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 bstTree.init();
-prettyPrint(bstTree.root);
+// prettyPrint(bstTree.root);
 bstTree.insert(6);
 bstTree.insert(500);
+prettyPrint(bstTree.root);
+bstTree.deleteItem(7);
 prettyPrint(bstTree.root);
