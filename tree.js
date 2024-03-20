@@ -24,23 +24,30 @@ export default class Tree {
     return childrenInt;
   }
 
-  static deleteCondition(rootNode, children, direction = null) {
-    const node = rootNode;
+  static deleteCondition(sourceNode, children) {
+    let node = sourceNode;
     return {
       0: () => {
-        node[direction] = null;
+        node = null;
       },
       1: () => {
         ['left', 'right'].forEach(childDir => {
-          if (node[direction][childDir] !== null)
-            node[direction] = node[direction][childDir];
+          if (node[childDir] !== null) node = node[childDir];
         });
       },
       2: () => {
-        // const integerToBeDeleted = node[direction].data; // find the next highest value to replace that
-        let intCompare = node[direction].right;
-        while (intCompare.left !== null) intCompare = intCompare.left;
-        console.log(intCompare);
+        let intCompare = node.right;
+        let parent = null;
+        while (intCompare.left !== null) {
+          parent = intCompare;
+          intCompare = intCompare.left;
+        }
+        node.data = intCompare.data;
+        if (parent !== null) {
+          parent.left = intCompare.right;
+        } else {
+          node.right = intCompare.right;
+        }
       },
     }[children]();
   }
@@ -54,7 +61,7 @@ export default class Tree {
     if (root[direction] === null) return false;
     if (root[direction].data === value) {
       const children = Tree.getChildrenInt(root[direction]);
-      return Tree.deleteCondition(root, children, direction);
+      return Tree.deleteCondition(root[direction], children);
     }
     return this.deleteItem(value, root[direction]);
   }
@@ -99,11 +106,13 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
   }
 };
 
-const bstTree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
+const bstTree = new Tree([
+  1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 321, 322, 323, 324, 318, 319,
+]);
 bstTree.init();
 // prettyPrint(bstTree.root);
 bstTree.insert(6);
 bstTree.insert(500);
 prettyPrint(bstTree.root);
-bstTree.deleteItem(6);
+bstTree.deleteItem(23);
 prettyPrint(bstTree.root);
