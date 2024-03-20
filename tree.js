@@ -24,6 +24,16 @@ export default class Tree {
     return childrenInt;
   }
 
+  find(value, node = this.root) {
+    if (node.data === value) return node;
+    if (node.data < value) {
+      if (node.right === null) return false;
+      return this.find(value, node.right);
+    }
+    if (node.left === null) return false;
+    return this.find(value, node.left);
+  }
+
   static deleteCondition(sourceNode, children) {
     let node = sourceNode;
     return {
@@ -113,6 +123,7 @@ bstTree.init();
 // prettyPrint(bstTree.root);
 bstTree.insert(6);
 bstTree.insert(500);
+// prettyPrint(bstTree.root);
+// bstTree.deleteItem(23);
 prettyPrint(bstTree.root);
-bstTree.deleteItem(23);
-prettyPrint(bstTree.root);
+console.log(bstTree.find(68));
