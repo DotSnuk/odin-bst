@@ -34,6 +34,39 @@ export default class Tree {
     return this.find(value, node.left);
   }
 
+  static defaultCall(node) {
+    console.log(`${node.data}`);
+  }
+
+  levelOrder(callback = Tree.defaultCall) {
+    const queue = [this.root];
+    while (queue.length > 0) {
+      const tempNode = queue.shift();
+      callback(tempNode);
+      ['left', 'right'].forEach(direction => {
+        if (tempNode[direction] !== null) queue.push(tempNode[direction]);
+      });
+    }
+  }
+
+  levelOrderRec(callback = Tree.defaultCall, queue = [this.root]) {
+    if (queue.length === 0) return true;
+    const temp = queue.shift();
+    callback(temp);
+    ['left', 'right'].forEach(direction => {
+      if (temp[direction] !== null) queue.push(temp[direction]);
+    });
+    return this.levelOrderRec(callback, queue);
+  }
+
+  inOrder(callback = Tree.defaultCall, node = this.root, arr = []) {
+    // left, root, right
+    if (node.left !== null) return this.inOrder(callback, node.left, arr);
+    arr.push(node.data);
+    if (node.right !== null) return this.inOrder(callback, node.right, arr);
+    return arr;
+  }
+
   static deleteCondition(sourceNode, children) {
     let node = sourceNode;
     return {
@@ -127,3 +160,4 @@ bstTree.insert(500);
 // bstTree.deleteItem(23);
 prettyPrint(bstTree.root);
 console.log(bstTree.find(68));
+console.log(bstTree.inOrder());
