@@ -59,12 +59,6 @@ export default class Tree {
     return this.levelOrderRec(callback, queue);
   }
 
-  static arrCallback(node, arr) {
-    const newArr = arr;
-    newArr.push(node.data);
-    return newArr;
-  }
-
   inOrder(callback = null, node = this.root, arr = []) {
     if (node.left === null && node.right === null) {
       if (typeof callback === 'function') return callback(node);
@@ -78,6 +72,8 @@ export default class Tree {
     }
     return arr;
   }
+
+  preOrder(callback = null, node = this.root, arr = []) {}
 
   static deleteCondition(sourceNode, children) {
     let node = sourceNode;
