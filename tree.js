@@ -59,11 +59,23 @@ export default class Tree {
     return this.levelOrderRec(callback, queue);
   }
 
-  inOrder(callback = Tree.defaultCall, node = this.root, arr = []) {
-    // left, root, right
-    if (node.left !== null) return this.inOrder(callback, node.left, arr);
+  static arrCallback(node, arr) {
+    const newArr = arr;
+    newArr.push(node.data);
+    return newArr;
+  }
+
+  inOrder(callback = null, node = this.root, arr = []) {
+    if (node.left === null && node.right === null) {
+      if (typeof callback === 'function') return callback(node);
+      return arr.push(node.data);
+    }
+    if (node.left !== null) this.inOrder(callback, node.left, arr);
+    if (typeof callback === 'function') callback(node);
     arr.push(node.data);
-    if (node.right !== null) return this.inOrder(callback, node.right, arr);
+    if (node.right !== null) {
+      return this.inOrder(callback, node.right, arr);
+    }
     return arr;
   }
 
