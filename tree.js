@@ -73,7 +73,17 @@ export default class Tree {
     return arr;
   }
 
-  preOrder(callback = null, node = this.root, arr = []) {}
+  preOrder(callback = null, node = this.root, arr = []) {
+    if (node.left === null && node.right === null) {
+      if (typeof callback === 'function') return callback(node);
+      return arr.push(node.data);
+    }
+    if (typeof callback === 'function') callback(node);
+    arr.push(node.data);
+    if (node.left !== null) this.preOrder(callback, node.left, arr);
+    if (node.right !== null) this.preOrder(callback, node.right, arr);
+    return arr;
+  }
 
   static deleteCondition(sourceNode, children) {
     let node = sourceNode;
@@ -169,3 +179,4 @@ bstTree.insert(500);
 prettyPrint(bstTree.root);
 console.log(bstTree.find(68));
 console.log(bstTree.inOrder());
+console.log(bstTree.preOrder());
